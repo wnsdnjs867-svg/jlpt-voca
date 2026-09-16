@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>JLPT N1 마스터 단어장</title>
+  <style>
+    :root {
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --primary: #4338ca;
+      --primary-light: #e0e7ff;
+      --text-main: #0f172a;
+      --text-sub: #64748b;
+      --danger: #ef4444;
+      --danger-bg: #fee2e2;
+      --success: #10b981;
+      --success-bg: #d1fae5;
+      --border: #e2e8f0;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+
+    header {
+      width: 100%; max-width: 600px; padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; background: #fff; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10;
+    }
+    header h1 { font-size: 1.3rem; font-weight: 800; color: var(--primary); }
+
+    .import-bar { width: 100%; max-width: 600px; padding: 12px 20px; background: var(--primary-light); display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; font-weight: 700; color: var(--primary); border-bottom: 1px solid var(--border); }
+    .import-btn { background: var(--primary); color: #fff; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.85rem; }
+
+    main { width: 100%; max-width: 600px; padding: 20px; flex: 1; display: flex; flex-direction: column; }
+    .day-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
+    .day-card { background: var(--card-bg); border-radius: 16px; padding: 20px; border: 1px solid var(--border); box-shadow: var(--shadow); cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; height: 140px; transition: transform 0.15s; }
+    .day-card:active { transform: scale(0.97); }
+    .day-title { font-size: 1.25rem; font-weight: 800; }
+    .read-count { display: inline-block; margin-top: 6px; padding: 3px 8px; background: var(--primary-light); color: var(--primary); font-size: 0.75rem; font-weight: 700; border-radius: 6px; }
+
+    .study-container { display: none; flex-direction: column; height: 100%; gap: 20px; }
+    .study-header { display: flex; align-items: center; justify-content: space-between; }
+    .back-btn { background: none; border: none; font-size: 1rem; font-weight: 700; color: var(--text-sub); cursor: pointer; }
+
+    .progress-bar-wrap { width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s ease; }
+
+    .card-scene { width: 100%; height: 340px; perspective: 1000px; }
+    .flashcard { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+    .flashcard.flipped { transform: rotateY(180deg); }
+    .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 20px; background: var(--card-bg); border: 1px solid var(--border); box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 24px; text-align: center; }
+    .card-back { transform: rotateY(180deg); background: #f8fafc; }
+    .card-kanji { font-size: 3.4rem; font-weight: 800; color: #0f172a; }
+    .card-hint { font-size: 0.8rem; color: #94a3b8; margin-top: 20px; }
+    .card-hiragana { font-size: 1.8rem; font-weight: 700; color: var(--primary); margin-bottom: 12px; }
+    .card-meaning { font-size: 1.4rem; font-weight: 600; color: #334155; }
+
+    .controls { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .btn { padding: 14px 10px; border-radius: 12px; border: none; font-size: 0.95rem; font-weight: 700; cursor: pointer; }
+    .btn-prev { background: #e2e8f0; color: #475569; }
+    .btn-review { background: var(--danger-bg); color: var(--danger); }
+    .btn-memorized { background: var(--success-bg); color: var(--success); }
+    .btn-next { background: var(--primary-light); color: var(--primary); }
+
+    .summary-card { background: #fff; border-radius: 20px; padding: 30px 20px; text-align: center; box-shadow: var(--shadow); display: none; flex-direction: column; gap: 20px; }
+    .action-btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-size: 1rem; font-weight: 700; cursor: pointer; }
+    .action-btn.primary { background: var(--primary); color: #fff; }
+    .action-btn.secondary { background: #f1f5f9; color: var(--text-main); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>JLPT N1 마스터 단어장</h1>
+    <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-sub);">하루 50단어</span>
+  </header>
+
+  <div class="import-bar">
+    <span>📂 N1 단어 JSON 파일 추가</span>
+    <button class="import-btn" onclick="document.getElementById('file-input').click()">파일 선택</button>
+    <input type="file" id="file-input" accept=".json" style="display:none;" onchange="importVocabulary(event)">
+  </div>
+
+  <main>
+    <!-- Day 목록 뷰 -->
+    <div id="day-list-view">
+      <div style="margin-bottom: 16px; font-weight: 700; color: var(--text-sub);" id="summary-header">
+        N1 학습 목록
+      </div>
+      <div class="day-grid" id="day-grid"></div>
+    </div>
+
+    <!-- 플래시 카드 학습 뷰 -->
+    <div id="study-view" class="study-container">
+      <div class="study-header">
+        <button class="back-btn" onclick="goBackToDays()">← 목록으로</button>
+        <span id="study-progress-text" style="font-weight: 700; color: var(--text-sub);">1 / 50</span>
+      </div>
+
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progress-bar"></div>
+      </div>
+
+      <div class="card-scene" onclick="flipCard()">
+        <div class="flashcard" id="flashcard">
+          <div class="card-face card-front">
+            <div class="card-kanji" id="card-kanji">漢字</div>
+            <div class="card-hint">탭하거나 스페이스바로 뒷면 확인</div>
+          </div>
+          <div class="card-face card-back">
+            <div class="card-hiragana" id="card-hiragana">かんじ</div>
+            <div class="card-meaning" id="card-meaning">한자</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn btn-prev" onclick="prevCard()">◀ 이전</button>
+        <button class="btn btn-review" onclick="markCard('review')">❌ 복습하기</button>
+        <button class="btn btn-memorized" onclick="markCard('memorized')">⭕ 외움</button>
+        <button class="btn btn-next" onclick="nextCard()">다음 ▶</button>
+      </div>
+    </div>
+
+    <!-- 학습 완료 요약 뷰 -->
+    <div id="summary-view" class="summary-card">
+      <div style="font-size: 1.5rem; font-weight: 800;">🎉 Day 학습 완료!</div>
+      <div style="display: flex; justify-content: space-around; margin: 20px 0;">
+        <div>
+          <h4 style="font-size:0.85rem; color:var(--text-sub);">완벽히 외움</h4>
+          <p id="stat-memorized" style="font-size:1.8rem; font-weight:800; color:var(--success);">0</p>
+        </div>
+        <div>
+          <h4 style="font-size:0.85rem; color:var(--text-sub);">복습 필요</h4>
+          <p id="stat-review" style="font-size:1.8rem; font-weight:800; color:var(--danger);">0</p>
+        </div>
+      </div>
+
+      <button class="action-btn primary" id="btn-retry-review" onclick="startReviewOnly()">
+        🔥 복습 필요 카드만 다시 하기 (<span id="review-count-badge">0</span>개)
+      </button>
+      <button class="action-btn secondary" onclick="restartEntireDay()">
+        🔄 전체 다시 복습하기 (+1회독)
+      </button>
+      <button class="action-btn secondary" onclick="goBackToDays()">
+        📋 Day 목록으로 돌아가기
+      </button>
+    </div>
+  </main>
+
+  <script>
+    // 기본 내장 N1 고빈출 단어 샘플 (JSON 업로드 시 덮어씌워짐)
+    const DEFAULT_N1_VOCAB = [
+      { kanji: "躊躇", hiragana: "ちゅうちょ", meaning: "망설임, 주저" },
+      { kanji: "緻密", hiragana: "ちみつ", meaning: "치밀함" },
+      { kanji: "齟齬", hiragana: "そご", meaning: "어긋남, 서어" },
+      { kanji: "牽引", hiragana: "けんいん", meaning: "견인, 이끎" },
+      { kanji: "迅速", hiragana: "じんそく", meaning: "신속" },
+      { kanji: "隠蔽", hiragana: "いんぺい", meaning: "은폐" },
+      { kanji: "軋轢", hiragana: "あつれき", meaning: "알력, 불화" },
+      { kanji: "示唆", hiragana: "しさ", meaning: "시사, 암시" },
+      { kanji: "頒布", hiragana: "はんぷ", meaning: "반포, 나누어 줌" },
+      { kanji: "網羅", hiragana: "もうら", meaning: "망라, 모두 포함함" },
+      { kanji: "招聘", hiragana: "しょうへい", meaning: "초빙" },
+      { kanji: "補填", hiragana: "ほてん", meaning: "보전, 메움" },
+      { kanji: "破綻", hiragana: "はたん", meaning: "파탄" },
+      { kanji: "露呈", hiragana: "ろてい", meaning: "드러남, 노정" },
+      { kanji: "脆弱", hiragana: "ぜいじゃく", meaning: "취약" },
+      { kanji: "乖離", hiragana: "かいり", meaning: "괴리" },
+      { kanji: "払拭", hiragana: "ふっしょく", meaning: "불식, 씻어냄" },
+      { kanji: "捏造", hiragana: "ねつぞう", meaning: "날조" },
+      { kanji: "逡巡", hiragana: "しゅんじゅん", meaning: "주저함, 준순" },
+      { kanji: "糾弾", hiragana: "きゅうだん", meaning: "규탄" }
+    ];
+
+    const WORDS_PER_DAY = 50; // 하루 50개 고정
+    let currentDay = 1;
+    let currentCards = [];
+    let currentIndex = 0;
+    let isFlipped = false;
+    let isReviewOnlyMode = false;
+
+    // N1 단어 데이터베이스 로드
+    function getN1Database() {
+      const stored = localStorage.getItem('N1_VOCAB_DATA');
+      return stored ? JSON.parse(stored) : DEFAULT_N1_VOCAB;
+    }
+
+    // Day별 단어 Slice (중복 0% 보장)
+    function getDayWords(dayNum) {
+      const db = getN1Database();
+      const startIndex = (dayNum - 1) * WORDS_PER_DAY;
+      const daySlice = db.slice(startIndex, startIndex + WORDS_PER_DAY);
+
+      return daySlice.map((item, idx) => ({
+        id: `n1_d${dayNum}_w${idx}`,
+        kanji: item.kanji,
+        hiragana: item.hiragana,
+        meaning: item.meaning
+      }));
+    }
+
+    // Day 그리드 출력
+    function renderDayList() {
+      const grid = document.getElementById('day-grid');
+      grid.innerHTML = '';
+      const db = getN1Database();
+      const totalWords = db.length;
+      const totalDays = Math.max(1, Math.ceil(totalWords / WORDS_PER_DAY));
+
+      document.getElementById('summary-header').innerText = `총 ${totalWords}개 단어 (Day 01 ~ Day ${String(totalDays).padStart(2, '0')})`;
+
+      for (let day = 1; day <= totalDays; day++) {
+        const readCount = localStorage.getItem(`n1_read_count_${day}`) || 0;
+        const countInThisDay = Math.min(WORDS_PER_DAY, totalWords - (day - 1) * WORDS_PER_DAY);
+        
+        const dayCard = document.createElement('div');
+        dayCard.className = 'day-card';
+        dayCard.onclick = () => startStudy(day);
+        dayCard.innerHTML = `
+          <div>
+            <div class="day-title">DAY ${String(day).padStart(2, '0')}</div>
+            <span class="read-count">${readCount}회독 완료</span>
+          </div>
+          <div style="font-size:0.8rem; color:var(--text-sub); display:flex; justify-content:space-between;">
+            <span>${countInThisDay} 단어</span>
+            <span>학습하기 →</span>
+          </div>
+        `;
+        grid.appendChild(dayCard);
+      }
+
+      document.getElementById('day-list-view').style.display = 'block';
+      document.getElementById('study-view').style.display = 'none';
+      document.getElementById('summary-view').style.display = 'none';
+    }
+
+    // 학습 시작
+    function startStudy(day) {
+      currentDay = day;
+      isReviewOnlyMode = false;
+      currentCards = getDayWords(day);
+      if (currentCards.length === 0) return;
+      currentIndex = 0;
+
+      document.getElementById('day-list-view').style.display = 'none';
+      document.getElementById('summary-view').style.display = 'none';
+      document.getElementById('study-view').style.display = 'flex';
+      showCard();
+    }
+
+    // 카드 출력
+    function showCard() {
+      isFlipped = false;
+      document.getElementById('flashcard').classList.remove('flipped');
+      const card = currentCards[currentIndex];
+      document.getElementById('card-kanji').innerText = card.kanji;
+      document.getElementById('card-hiragana').innerText = card.hiragana;
+      document.getElementById('card-meaning').innerText = card.meaning;
+      document.getElementById('study-progress-text').innerText = `${currentIndex + 1} / ${currentCards.length}`;
+      document.getElementById('progress-bar').style.width = `${((currentIndex + 1) / currentCards.length) * 100}%`;
+    }
+
+    function flipCard() {
+      isFlipped = !isFlipped;
+      document.getElementById('flashcard').classList.toggle('flipped', isFlipped);
+    }
+
+    function markCard(type) {
+      localStorage.setItem(`status_${currentCards[currentIndex].id}`, type);
+      nextCard();
+    }
+
+    function nextCard() {
+      if (currentIndex < currentCards.length - 1) {
+        currentIndex++;
+        showCard();
+      } else {
+        finishDay();
+      }
+    }
+
+    function prevCard() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        showCard();
+      }
+    }
+
+    // 완료 화면
+    function finishDay() {
+      if (!isReviewOnlyMode) {
+        const curr = parseInt(localStorage.getItem(`n1_read_count_${currentDay}`) || 0);
+        localStorage.setItem(`n1_read_count_${currentDay}`, curr + 1);
+      }
+
+      let memorized = 0, review = 0;
+      currentCards.forEach(c => {
+        const st = localStorage.getItem(`status_${c.id}`);
+        if (st === 'memorized') memorized++;
+        else if (st === 'review') review++;
+      });
+
+      document.getElementById('stat-memorized').innerText = memorized;
+      document.getElementById('stat-review').innerText = review;
+      document.getElementById('review-count-badge').innerText = review;
+      document.getElementById('btn-retry-review').style.display = review > 0 ? 'block' : 'none';
+
+      document.getElementById('study-view').style.display = 'none';
+      document.getElementById('summary-view').style.display = 'flex';
+    }
+
+    function startReviewOnly() {
+      isReviewOnlyMode = true;
+      currentCards = currentCards.filter(c => localStorage.getItem(`status_${c.id}`) === 'review');
+      if (currentCards.length === 0) return;
+      currentIndex = 0;
+      document.getElementById('summary-view').style.display = 'none';
+      document.getElementById('study-view').style.display = 'flex';
+      showCard();
+    }
+
+    function restartEntireDay() { startStudy(currentDay); }
+    function goBackToDays() { renderDayList(); }
+
+    // JSON 업로드 로직 (3000개 단어 처리)
+    function importVocabulary(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (!Array.isArray(data)) {
+            alert('JSON 파일 형태가 올바른 배열([ ]) 형식이 아닙니다.');
+            return;
+          }
+          localStorage.setItem('N1_VOCAB_DATA', JSON.stringify(data));
+          alert(`N1 단어 ${data.length}개가 성공적으로 불러와졌습니다!`);
+          renderDayList();
+        } catch (err) {
+          alert('JSON 파일 형식이 올바르지 않습니다.');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // 키보드 단축키
+    document.addEventListener('keydown', (e) => {
+      const studyView = document.getElementById('study-view');
+      if (studyView.style.display === 'flex') {
+        if (e.key === ' ') { e.preventDefault(); flipCard(); }
+        else if (e.key === 'ArrowRight') nextCard();
+        else if (e.key === 'ArrowLeft') prevCard();
+        else if (e.key === '1') markCard('review');
+        else if (e.key === '2') markCard('memorized');
+      }
+    });
+
+    window.onload = renderDayList;
+  </script>
+</body>
+</html>
