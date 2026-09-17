@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>단어의 서재 - JLPT WORD BOOK</title>
+  <style>
+    :root {
+      --bg-main: #f5f5f8;
+      --card-purple: #3b3554;
+      --card-purple-hover: #2e2943;
+      --text-dark: #1f1e24;
+      --text-sub: #8e8d9a;
+      --text-light: #ab6ba0;
+      --border-light: #e6e6eb;
+      --card-white: #ffffff;
+      --btn-purple: #3b3554;
+      --btn-purple-hover: #2d2843;
+      --btn-grey: #ffffff;
+      --shadow-sm: 0 4px 12px rgba(0,0,0,0.03);
+      --shadow-md: 0 8px 24px rgba(0,0,0,0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* 상단 헤더 */
+    header {
+      width: 100%;
+      max-width: 900px;
+      padding: 24px 24px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--card-purple);
+      color: #fff;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
+    }
+
+    .logo-text .title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--text-dark);
+      letter-spacing: -0.3px;
+    }
+
+    .logo-text .subtitle {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #a0a0b0;
+      letter-spacing: 0.5px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .motto {
+      font-size: 0.85rem;
+      color: #9e9eb0;
+      font-weight: 500;
+    }
+
+    .import-btn {
+      background: #e4e4ec;
+      color: var(--text-dark);
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* 메인 화면 */
+    main {
+      width: 100%;
+      max-width: 900px;
+      padding: 10px 24px 40px;
+      flex: 1;
+    }
+
+    .hero-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 20px;
+      margin-bottom: 28px;
+    }
+
+    .hero-left .sub-tag {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #a4a4b8;
+      letter-spacing: 1px;
+    }
+
+    .hero-left h2 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--text-dark);
+      margin: 6px 0 4px;
+    }
+
+    .hero-left p {
+      font-size: 0.9rem;
+      color: #9494a6;
+    }
+
+    /* 급수 탭 */
+    .level-tabs {
+      display: flex;
+      background: #e6e6ee;
+      padding: 4px;
+      border-radius: 10px;
+      gap: 2px;
+    }
+
+    .level-tab {
+      padding: 6px 18px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #7e7e90;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .level-tab.active {
+      background: #ffffff;
+      color: var(--text-dark);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    /* 섹션 제목 */
+    .section-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+    }
+
+    .sec-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-dark);
+    }
+
+    .sec-stats {
+      font-size: 0.8rem;
+      color: #9e9eb0;
+      font-weight: 600;
+    }
+
+    /* Day 그리드 카드 */
+    .day-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .day-item {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .day-card-purple {
+      background: var(--card-purple);
+      border-radius: 16px;
+      padding: 22px 20px 16px;
+      color: #fff;
+      height: 160px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .day-card-purple:active {
+      transform: scale(0.97);
+      background: var(--card-purple-hover);
+    }
+
+    .card-top-tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #a29cb8;
+      letter-spacing: 0.5px;
+    }
+
+    .card-day-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .card-bottom-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #b5afd0;
+      font-weight: 600;
+    }
+
+    .day-sub-info {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 4px;
+      font-size: 0.8rem;
+      color: #9e9eb0;
+      font-weight: 600;
+    }
+
+    .footer-note {
+      font-size: 0.8rem;
+      color: #a8a8b8;
+      line-height: 1.6;
+      border-top: 1px solid #e8e8f0;
+      padding-top: 20px;
+    }
+
+    /* 학습 화면 */
+    .study-container {
+      display: none;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .study-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #9e9eb0;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .nav-back {
+      background: none;
+      border: none;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #7e7e90;
+      cursor: pointer;
+    }
+
+    .study-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .study-header-bar h2 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--text-dark);
+    }
+
+    .study-counter {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #a0a0b0;
+    }
+
+    /* 플래시 카드 세션 */
+    .card-wrapper {
+      width: 100%;
+      height: 360px;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card-inner.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      background: var(--card-white);
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 36px 24px 28px;
+      text-align: center;
+    }
+
+    .card-back {
+      transform: rotateY(180deg);
+      background: #fbfbfd;
+    }
+
+    .card-tag {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #c0c0d0;
+      letter-spacing: 1px;
+    }
+
+    .card-kanji {
+      font-size: 4rem;
+      font-weight: 800;
+      color: #1a1a20;
+    }
+
+    .card-hiragana {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #2b2b36;
+      margin-bottom: 8px;
+    }
+
+    .card-meaning {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #5a5a6e;
+    }
+
+    .card-hint {
+      font-size: 0.8rem;
+      color: #b0b0c0;
+      font-weight: 600;
+    }
+
+    /* 컨트롤 버튼 */
+    .study-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .btn-ctrl {
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border-light);
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+
+    .btn-review {
+      background: #ffffff;
+      color: #6e6e82;
+    }
+
+    .btn-memorized {
+      background: var(--btn-purple);
+      color: #ffffff;
+      border: none;
+    }
+
+    .btn-ctrl:active {
+      transform: scale(0.98);
+    }
+
+    .study-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      padding: 0 4px;
+      color: #a0a0b0;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .btn-prev-card {
+      background: none;
+      border: none;
+      color: #8e8e9e;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* 요약 완료 화면 */
+    .summary-view {
+      display: none;
+      background: #fff;
+      border-radius: 20px;
+      padding: 40px 24px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      max-width: 500px;
+      margin: 40px auto;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .summary-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+    }
+
+    .summary-btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: 12px;
+      border: none;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .summary-btn.primary { background: var(--btn-purple); color: #fff; }
+    .summary-btn.secondary { background: #f0f0f5; color: var(--text-dark); }
+  </style>
+</head>
+<body>
+
+  <!-- 상단 헤더 -->
+  <header>
+    <div class="logo-area">
+      <div class="logo-icon">文</div>
+      <div class="logo-text">
+        <div class="title">단어의 서재</div>
+        <div class="subtitle">JLPT WORD BOOK</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="motto">50개씩, 나만의 속도로.</span>
+      <button class="import-btn" onclick="document.getElementById('file-input').click()">📂 JSON 불러오기</button>
+      <input type="file" id="file-input" accept=".json" style="display:none;" onchange="importVocabulary(event)">
+    </div>
+  </header>
+
+  <main>
+    <!-- 1. 메인 서재 뷰 -->
+    <div id="main-view">
+      <div class="hero-section">
+        <div class="hero-left">
+          <span class="sub-tag">MY LITTLE BOOKSHELF</span>
+          <h2>오늘은 어느 Day를 펼칠까요?</h2>
+          <p>어제 읽던 곳도, 처음 펼치는 곳도.</p>
+        </div>
+        <div class="level-tabs">
+          <button class="level-tab" onclick="selectLevel('N3')">N3</button>
+          <button class="level-tab" onclick="selectLevel('N2')">N2</button>
+          <button class="level-tab active" onclick="selectLevel('N1')">N1</button>
+        </div>
+      </div>
+
+      <div class="section-info">
+        <div class="sec-title" id="sec-title">N1 단어장</div>
+        <div class="sec-stats" id="sec-stats">200단어 · 4 Days · 0개 Day 회독 완료</div>
+      </div>
+
+      <!-- Day 카드 그리드 -->
+      <div class="day-grid" id="day-grid"></div>
+
+      <div class="footer-note">
+        표지를 눌러 학습하세요. 카드를 뒤집은 뒤 복습하기 또는 외움으로 분류합니다.<br>
+        50개를 모두 확인하면 1회독 완료. 복습 카드는 표지 아래에서 언제든 다시 볼 수 있습니다.
+      </div>
+    </div>
+
+    <!-- 2. 플래시 카드 학습 뷰 -->
+    <div id="study-view" class="study-container">
+      <div class="study-nav">
+        <button class="nav-back" onclick="goBackToMain()">← 서재</button>
+        <span id="study-nav-center">N1 · DAY 01</span>
+        <span id="study-nav-right">0회독 완료</span>
+      </div>
+
+      <div class="study-header-bar">
+        <h2 id="study-day-title">Day 01</h2>
+        <span class="study-counter" id="study-counter">1 / 50</span>
+      </div>
+
+      <!-- 카드 터치 영역 -->
+      <div class="card-wrapper" onclick="flipCard()">
+        <div class="card-inner" id="flashcard">
+          <!-- 앞면 -->
+          <div class="card-face card-front">
+            <span class="card-tag">WORD</span>
+            <div class="card-kanji" id="card-kanji">遵守</div>
+            <span class="card-hint">카드를 눌러 뜻 확인</span>
+          </div>
+          <!-- 뒷면 -->
+          <div class="card-face card-back">
+            <span class="card-tag">READING & MEANING</span>
+            <div>
+              <div class="card-hiragana" id="card-hiragana">じゅんしゅ</div>
+              <div class="card-meaning" id="card-meaning">준수</div>
+            </div>
+            <span class="card-hint">한 번 더 누르면 앞면</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 제어 버튼 -->
+      <div class="study-controls">
+        <button class="btn-ctrl btn-review" onclick="markCard('review')">↰ 복습하기</button>
+        <button class="btn-ctrl btn-memorized" onclick="markCard('memorized')">✓ 외움</button>
+      </div>
+
+      <!-- 하단 정보 -->
+      <div class="study-footer">
+        <button class="btn-prev-card" onclick="prevCard()">← 이전 카드</button>
+        <span id="study-bottom-read">1회독</span>
+      </div>
+    </div>
+
+    <!-- 3. 학습 완료 요약 뷰 -->
+    <div id="summary-view" class="summary-view">
+      <div class="summary-title">🎉 Day 완료!</div>
+      <p style="color:var(--text-sub);">이번 회독 학습이 완료되었습니다.</p>
+      <div style="display:flex; justify-content:space-around; margin: 10px 0;">
+        <div><h4>완벽히 외움</h4><p id="sum-memorized" style="font-size:1.8rem; font-weight:800; color:#10b981;">0</p></div>
+        <div><h4>복습 필요</h4><p id="sum-review" style="font-size:1.8rem; font-weight:800; color:#ef4444;">0</p></div>
+      </div>
+      <button class="summary-btn primary" id="btn-retry-review" onclick="startReviewOnly()">🔥 복습 필요 카드만 다시 하기</button>
+      <button class="summary-btn secondary" onclick="restartEntireDay()">🔄 전체 다시 하기 (+1회독)</button>
+      <button class="summary-btn secondary" onclick="goBackToMain()">📋 서재로 돌아가기</button>
+    </div>
+  </main>
+
+  <script>
+    // 기본 검증된 N1 고빈출 어휘 200개 (Day 01 ~ Day 04 분량 탑재)
+    const DEFAULT_VOCAB = {
+      N1: [
+        { kanji: "遵守", hiragana: "じゅんしゅ", meaning: "준수" },
+        { kanji: "躊躇", hiragana: "ちゅうちょ", meaning: "망설임, 주저" },
+        { kanji: "緻密", hiragana: "ちみつ", meaning: "치밀함" },
+        { kanji: "齟齬", hiragana: "そご", meaning: "어긋남, 서어" },
+        { kanji: "牽引", hiragana: "けんいん", meaning: "견인, 이끎" },
+        { kanji: "迅速", hiragana: "じんそく", meaning: "신속" },
+        { kanji: "隠蔽", hiragana: "いんぺい", meaning: "은폐" },
+        { kanji: "軋轢", hiragana: "あつれき", meaning: "알력, 불화" },
+        { kanji: "示唆", hiragana: "しさ", meaning: "시사, 암시" },
+        { kanji: "頒布", hiragana: "はんぷ", meaning: "반포, 나누어 줌" },
+        { kanji: "網羅", hiragana: "もうら", meaning: "망라" },
+        { kanji: "招聘", hiragana: "しょうへい", meaning: "초빙" },
+        { kanji: "補填", hiragana: "ほてん", meaning: "보전, 메움" },
+        { kanji: "破綻", hiragana: "はたん", meaning: "파탄" },
+        { kanji: "露呈", hiragana: "ろてい", meaning: "드러남, 노정" },
+        { kanji: "脆弱", hiragana: "ぜいじゃく", meaning: "취약" },
+        { kanji: "乖離", hiragana: "かいり", meaning: "괴리" },
+        { kanji: "払拭", hiragana: "ふっしょく", meaning: "불식" },
+        { kanji: "捏造", hiragana: "ねつぞう", meaning: "날조" },
+        { kanji: "逡巡", hiragana: "しゅんじゅん", meaning: "주저함, 준순" },
+        { kanji: "糾弾", hiragana: "きゅうだん", meaning: "규탄" },
+        { kanji: "斟酌", hiragana: "しんしゃく", meaning: "참작" },
+        { kanji: "蹂躙", hiragana: "じゅうりん", meaning: "유린" },
+        { kanji: "攪乱", hiragana: "かくらん", meaning: "교란" },
+        { kanji: "凌駕", hiragana: "りょうが", meaning: "능가" },
+        { kanji: "暫定", hiragana: "ざんてい", meaning: "잠정" },
+        { kanji: "希求", hiragana: "ききゅう", meaning: "희구, 간절히 바람" },
+        { kanji: "標榜", hiragana: "ひょうぼう", meaning: "표방" },
+        { kanji: "敷衍", hiragana: "ふえん", meaning: "부연 설명함" },
+        { kanji: "糾明", hiragana: "きゅうめい", meaning: "규명" },
+        { kanji: "宿弊", hiragana: "しゅくへい", meaning: "고질적 폐단" },
+        { kanji: "瓦解", hiragana: "がかい", meaning: "와해" },
+        { kanji: "糾合", hiragana: "きゅうごう", meaning: "규합" },
+        { kanji: "参画", hiragana: "さんかく", meaning: "기획 참여" },
+        { kanji: "涵養", hiragana: "かんよう", meaning: "함양" },
+        { kanji: "啓発", hiragana: "けいはつ", meaning: "계발" },
+        { kanji: "提言", hiragana: "ていげん", meaning: "제언" },
+        { kanji: "諮問", hiragana: "しもん", meaning: "자문" },
+        { kanji: "追認", hiragana: "ついにん", meaning: "추인" },
+        { kanji: "批准", hiragana: "ひじゅん", meaning: "비준" },
+        { kanji: "摘発", hiragana: "てきはつ", meaning: "적발" },
+        { kanji: "抹消", hiragana: "まっしょう", meaning: "말소" },
+        { kanji: "没収", hiragana: "ぼっしゅう", meaning: "몰수" },
+        { kanji: "吟味", hiragana: "ぎんみ", meaning: "음미, 검토함" },
+        { kanji: "察知", hiragana: "さっち", meaning: "살피어 앎" },
+        { kanji: "洞察", hiragana: "どうさつ", meaning: "통찰" },
+        { kanji: "予見", hiragana: "よけん", meaning: "예견" },
+        { kanji: "探知", hiragana: "たんち", meaning: "탐지" },
+        { kanji: "探求", hiragana: "たんきゅう", meaning: "탐구" },
+        { kanji: "考証", hiragana: "こうしょう", meaning: "고증" },
+
+        // Day 2
+        { kanji: "刷新", hiragana: "さっしん", meaning: "쇄신" },
+        { kanji: "変革", hiragana: "へんかく", meaning: "변혁" },
+        { kanji: "改編", hiragana: "かいへん", meaning: "개편" },
+        { kanji: "再編", hiragana: "さいへん", meaning: "재편" },
+        { kanji: "統合", hiragana: "とうごう", meaning: "통합" },
+        { kanji: "解体", hiragana: "かいたい", meaning: "해체" },
+        { kanji: "分散", hiragana: "ぶんさん", meaning: "분산" },
+        { kanji: "集積", hiragana: "しゅうせき", meaning: "집적" },
+        { kanji: "集約", hiragana: "しゅうやく", meaning: "집약" },
+        { kanji: "拡充", hiragana: "かくじゅう", meaning: "확충" },
+        { kanji: "増強", hiragana: "ぞうきょう", meaning: "증강" },
+        { kanji: "補強", hiragana: "ほきょう", meaning: "보강" },
+        { kanji: "扶助", hiragana: "ふじょ", meaning: "부조" },
+        { kanji: "救済", hiragana: "きゅうさい", meaning: "구제" },
+        { kanji: "恩恵", hiragana: "おんけい", meaning: "은혜" },
+        { kanji: "優遇", hiragana: "ゆうぐう", meaning: "우대" },
+        { kanji: "冷遇", hiragana: "れいぐう", meaning: "냉대" },
+        { kanji: "排斥", hiragana: "はいせき", meaning: "배척" },
+        { kanji: "隔離", hiragana: "かくり", meaning: "격리" },
+        { kanji: "遮断", hiragana: "しゃだん", meaning: "차단" },
+        { kanji: "閉鎖", hiragana: "へいさ", meaning: "폐쇄" },
+        { kanji: "釈放", hiragana: "しゃくほう", meaning: "석방" },
+        { kanji: "拘留", hiragana: "こうりゅう", meaning: "구류" },
+        { kanji: "監禁", hiragana: "かんきん", meaning: "감금" },
+        { kanji: "監修", hiragana: "かんしゅう", meaning: "감수" },
+        { kanji: "統括", hiragana: "とうかつ", meaning: "통괄" },
+        { kanji: "掌握", hiragana: "しょうあく", meaning: "장악" },
+        { kanji: "服従", hiragana: "ふくじゅう", meaning: "복종" },
+        { kanji: "隷属", hiragana: "れいぞく", meaning: "예속" },
+        { kanji: "屈服", hiragana: "くっぷく", meaning: "굴복" },
+        { kanji: "反発", hiragana: "はんぱつ", meaning: "반발" },
+        { kanji: "抵抗", hiragana: "ていこう", meaning: "저항" },
+        { kanji: "蜂起", hiragana: "ほうき", meaning: "봉기" },
+        { kanji: "鎮圧", hiragana: "ちんあつ", meaning: "진압" },
+        { kanji: "終息", hiragana: "しゅうそく", meaning: "종식" },
+        { kanji: "決裂", hiragana: "けつれつ", meaning: "결렬" },
+        { kanji: "和解", hiragana: "わかい", meaning: "화해" },
+        { kanji: "調停", hiragana: "ちょうてい", meaning: "조정" },
+        { kanji: "仲裁", hiragana: "ちゅうさい", meaning: "중재" },
+        { kanji: "妥結", hiragana: "だけつ", meaning: "타결" },
+        { kanji: "締結", hiragana: "ていけつ", meaning: "체결" },
+        { kanji: "発効", hiragana: "はっこう", meaning: "발효" },
+        { kanji: "失効", hiragana: "しっこう", meaning: "실효" },
+        { kanji: "懸念", hiragana: "けねん", meaning: "우려" },
+        { kanji: "漂流", hiragana: "ひょうりゅう", meaning: "표류" },
+        { kanji: "葛藤", hiragana: "かっとう", meaning: "갈등" },
+        { kanji: "収縮", hiragana: "しゅうしゅく", meaning: "수축" },
+        { kanji: "膨張", hiragana: "ぼうちょう", meaning: "팽창" },
+        { kanji: "逸脱", hiragana: "いつだつ", meaning: "일탈" },
+        { kanji: "顕著", hiragana: "けんちょ", meaning: "현저함" },
+
+        // Day 3
+        { kanji: "曖昧", hiragana: "あいまい", meaning: "애매함" },
+        { kanji: "漠然", hiragana: "ばくぜん", meaning: "막연함" },
+        { kanji: "冗長", hiragana: "じょうちょう", meaning: "장황함" },
+        { kanji: "潜在", hiragana: "せんざい", meaning: "잠재" },
+        { kanji: "普遍", hiragana: "ふへん", meaning: "보편" },
+        { kanji: "特殊", hiragana: "とくしゅ", meaning: "특수" },
+        { kanji: "卓越", hiragana: "たくえつ", meaning: "탁월" },
+        { kanji: "平穏", hiragana: "へいおん", meaning: "평온" },
+        { kanji: "驚異", hiragana: "きょうい", meaning: "경이" },
+        { kanji: "驚愕", hiragana: "きょうがく", meaning: "경악" },
+        { kanji: "畏怖", hiragana: "いふ", meaning: "외포, 두려움" },
+        { kanji: "羨望", hiragana: "せんぼう", meaning: "선망, 부러움" },
+        { kanji: "嫉妬", hiragana: "しっと", meaning: "질투" },
+        { kanji: "羞恥", hiragana: "しゅうち", meaning: "수치" },
+        { kanji: "疑惑", hiragana: "ぎわく", meaning: "의혹" },
+        { kanji: "念願", hiragana: "ねんがん", meaning: "염원" },
+        { kanji: "宿願", hiragana: "しゅくがん", meaning: "숙원" },
+        { kanji: "執着", hiragana: "しゅうちゃく", meaning: "집착" },
+        { kanji: "拘泥", hiragana: "こうでい", meaning: "구애받음" },
+        { kanji: "固執", hiragana: "こしつ", meaning: "고집" },
+        { kanji: "妄想", hiragana: "もうそう", meaning: "망상" },
+        { kanji: "幻覚", hiragana: "げんかく", meaning: "환각" },
+        { kanji: "錯覚", hiragana: "さっかく", meaning: "착각" },
+        { kanji: "偏見", hiragana: "へんけん", meaning: "편견" },
+        { kanji: "先入観", hiragana: "せんにゅうかん", meaning: "선입관" },
+        { kanji: "独断", hiragana: "どくだん", meaning: "독단" },
+        { kanji: "偏重", hiragana: "へんちょう", meaning: "편중" },
+        { kanji: "傾倒", hiragana: "けいとう", meaning: "경도, 몰두" },
+        { kanji: "没頭", hiragana: "ぼっとう", meaning: "몰두" },
+        { kanji: "専念", hiragana: "せんねん", meaning: "전념" },
+        { kanji: "投機", hiragana: "とうき", meaning: "투기" },
+        { kanji: "投資", hiragana: "とうし", meaning: "투자" },
+        { kanji: "融資", hiragana: "ゆうし", meaning: "융자" },
+        { kanji: "出資", hiragana: "しゅっし", meaning: "출자" },
+        { kanji: "債務", "hiragana": "さいむ", meaning: "채무" },
+        { kanji: "債権", hiragana: "さいけん", meaning: "채권" },
+        { kanji: "返済", hiragana: "へんさい", meaning: "변제" },
+        { kanji: "償還", hiragana: "しょうかん", meaning: "상환" },
+        { kanji: "滞納", hiragana: "たいのう", meaning: "체납" },
+        { kanji: "破産", hiragana: "はさん", meaning: "파산" },
+        { kanji: "倒産", hiragana: "とうさん", meaning: "도산" },
+        { kanji: "争議", hiragana: "そうぎ", meaning: "쟁의" },
+        { kanji: "罷免", hiragana: "ひめん", meaning: "파면" },
+        { kanji: "解任", hiragana: "かいにん", meaning: "해임" },
+        { kanji: "更迭", hiragana: "こうてつ", meaning: "경질" },
+        { kanji: "辞職", hiragana: "じしょく", meaning: "사직" },
+        { kanji: "辞退", hiragana: "じたい", meaning: "사퇴" },
+        { kanji: "留任", hiragana: "りゅうにん", meaning: "유임" },
+        { kanji: "重任", hiragana: "じゅうにん", meaning: "중임" },
+        { kanji: "就任", hiragana: "しゅうにん", meaning: "취임" },
+
+        // Day 4
+        { kanji: "概念", hiragana: "がいねん", meaning: "개념" },
+        { kanji: "理念", hiragana: "りねん", meaning: "이념" },
+        { kanji: "懸案", hiragana: "けんあん", meaning: "현안" },
+        { kanji: "懸賞", hiragana: "けんしょう", meaning: "현상금" },
+        { kanji: "訴訟", hiragana: "そしょう", meaning: "소송" },
+        { kanji: "告発", hiragana: "こくはつ", meaning: "고발" },
+        { kanji: "告訴", hiragana: "こくそ", meaning: "고소" },
+        { kanji: "裁判", hiragana: "さいばん", meaning: "재판" },
+        { kanji: "勝訴", hiragana: "しょうそ", meaning: "승소" },
+        { kanji: "敗訴", hiragana: "はいそ", meaning: "패소" },
+        { kanji: "冤罪", hiragana: "えんざい", meaning: "누명" },
+        { kanji: "釈明", hiragana: "しゃくめい", meaning: "소명" },
+        { kanji: "弁明", hiragana: "べんめい", meaning: "변명" },
+        { kanji: "答弁", hiragana: "とうべん", meaning: "답변" },
+        { kanji: "反論", hiragana: "はんろん", meaning: "반론" },
+        { kanji: "異議", hiragana: "いぎ", meaning: "이의" },
+        { kanji: "異論", hiragana: "いろん", meaning: "다른 의견" },
+        { kanji: "協定", hiragana: "きょうてい", meaning: "협정" },
+        { kanji: "条約", hiragana: "じょうやく", meaning: "조약" },
+        { kanji: "宣言", hiragana: "せんげん", meaning: "선언" },
+        { kanji: "布告", hiragana: "ふこく", meaning: "포고" },
+        { kanji: "通達", hiragana: "つうたつ", meaning: "통달" },
+        { kanji: "告示", hiragana: "こくじ", meaning: "고시" },
+        { kanji: "照会", hiragana: "しょうかい", meaning: "조회" },
+        { kanji: "照合", hiragana: "しょうごう", meaning: "대조" },
+        { kanji: "検証", hiragana: "けんしょう", meaning: "검증" },
+        { kanji: "実証", hiragana: "じっしょう", meaning: "실증" },
+        { kanji: "考察", hiragana: "こうさつ", meaning: "고찰" },
+        { kanji: "推敲", hiragana: "すいこう", meaning: "퇴고" },
+        { kanji: "添削", hiragana: "てんさく", meaning: "첨삭" },
+        { kanji: "校正", hiragana: "こうせい", meaning: "교정" },
+        { kanji: "執筆", hiragana: "しっぴつ", meaning: "집필" },
+        { kanji: "寄稿", hiragana: "きこう", meaning: "기고" },
+        { kanji: "連載", hiragana: "れんさい", meaning: "연재" },
+        { kanji: "刊行", hiragana: "かんこう", meaning: "간행" },
+        { kanji: "購読", hiragana: "こうどく", meaning: "구독" },
+        { kanji: "著作", hiragana: "ちょさく", meaning: "저작" },
+        { kanji: "盗用", hiragana: "とうよう", meaning: "도용" },
+        { kanji: "盗作", hiragana: "とうさく", meaning: "표절" },
+        { kanji: "引用", hiragana: "いんよう", meaning: "인용" },
+        { kanji: "転載", hiragana: "てんさい", meaning: "전재" },
+        { kanji: "翻案", hiragana: "ほんあん", meaning: "번안" },
+        { kanji: "翻訳", hiragana: "ほんやく", meaning: "번역" },
+        { kanji: "通訳", hiragana: "つうやく", meaning: "통역" },
+        { kanji: "逐次", hiragana: "ちくじ", meaning: "축차, 순차" },
+        { kanji: "同時", hiragana: "どうじ", meaning: "동시" },
+        { kanji: "意訳", hiragana: "いやく", meaning: "의역" },
+        { kanji: "直訳", hiragana: "ちょくやく", meaning: "직역" },
+        { kanji: "覚悟", hiragana: "かくご", meaning: "각오" },
+        { kanji: "決意", hiragana: "けつい", meaning: "결의" }
+      ]
+    };
+
+    const WORDS_PER_DAY = 50;
+    let currentLevel = 'N1';
+    let currentDay = 1;
+    let currentCards = [];
+    let currentIndex = 0;
+    let isFlipped = false;
+    let isReviewOnlyMode = false;
+
+    // 데이터베이스 로드
+    function getVocabDb() {
+      const stored = localStorage.getItem('MY_KOTOBA_DB');
+      return stored ? JSON.parse(stored) : DEFAULT_VOCAB;
+    }
+
+    // Day별 단어 추출
+    function getDayWords(level, dayNum) {
+      const db = getVocabDb();
+      const list = db[level] || [];
+      const start = (dayNum - 1) * WORDS_PER_DAY;
+      const slice = list.slice(start, start + WORDS_PER_DAY);
+
+      return slice.map((item, idx) => ({
+        id: `${level}_d${dayNum}_w${idx}`,
+        kanji: item.kanji,
+        hiragana: item.hiragana,
+        meaning: item.meaning
+      }));
+    }
+
+    // 급수 선택
+    function selectLevel(level) {
+      currentLevel = level;
+      document.querySelectorAll('.level-tab').forEach(btn => {
+        btn.classList.toggle('active', btn.innerText === level);
+      });
+      renderMain();
+    }
+
+    // 메인 화면 그리기
+    function renderMain() {
+      const db = getVocabDb();
+      const list = db[currentLevel] || [];
+      const totalWords = list.length;
+      const totalDays = Math.max(1, Math.ceil(totalWords / WORDS_PER_DAY));
+
+      let totalReadDays = 0;
+      for (let d = 1; d <= totalDays; d++) {
+        if (parseInt(localStorage.getItem(`read_cnt_${currentLevel}_${d}`) || 0) > 0) {
+          totalReadDays++;
+        }
+      }
+
+      document.getElementById('sec-title').innerText = `${currentLevel} 단어장`;
+      document.getElementById('sec-stats').innerText = `${totalWords}단어 · ${totalDays} Days · ${totalReadDays}개 Day 회독 완료`;
+
+      const grid = document.getElementById('day-grid');
+      grid.innerHTML = '';
+
+      for (let day = 1; day <= totalDays; day++) {
+        const readCnt = localStorage.getItem(`read_cnt_${currentLevel}_${day}`) || 0;
+        const wordCount = Math.min(WORDS_PER_DAY, totalWords - (day - 1) * WORDS_PER_DAY);
+        const dayStr = String(day).padStart(2, '0');
+
+        // 상태값 계산
+        let statusText = "시작 전";
+        let progressVal = `0/${wordCount}`;
+
+        const itemWrap = document.createElement('div');
+        itemWrap.className = 'day-item';
+
+        itemWrap.innerHTML = `
+          <div class="day-card-purple" onclick="startStudy(${day})">
+            <span class="card-top-tag">JLPT ${currentLevel}</span>
+            <div class="card-day-title">Day ${dayStr}</div>
+            <div class="card-bottom-info">
+              <span>${readCnt}회독 완료</span>
+              <span>${wordCount} WORDS</span>
+            </div>
+          </div>
+          <div class="day-sub-info">
+            <span>${statusText}</span>
+            <span>${progressVal}</span>
+          </div>
+        `;
+        grid.appendChild(itemWrap);
+      }
+
+      document.getElementById('main-view').style.display = 'block';
+      document.getElementById('study-view').style.display = 'none';
+      document.getElementById('summary-view').style.display = 'none';
+    }
+
+    // 학습 시작
+    function startStudy(day) {
+      currentDay = day;
+      isReviewOnlyMode = false;
+      currentCards = getDayWords(currentLevel, day);
+      if (currentCards.length === 0) return;
+      currentIndex = 0;
+
+      const dayStr = String(day).padStart(2, '0');
+      const readCnt = localStorage.getItem(`read_cnt_${currentLevel}_${day}`) || 0;
+
+      document.getElementById('study-nav-center').innerText = `${currentLevel} · DAY ${dayStr}`;
+      document.getElementById('study-nav-right').innerText = `${readCnt}회독 완료`;
+      document.getElementById('study-day-title').innerText = `Day ${dayStr}`;
+      document.getElementById('study-bottom-read').innerText = `${parseInt(readCnt) + 1}회독`;
+
+      document.getElementById('main-view').style.display = 'none';
+      document.getElementById('summary-view').style.display = 'none';
+      document.getElementById('study-view').style.display = 'flex';
+
+      showCard();
+    }
+
+    // 카드 출력
+    function showCard() {
+      isFlipped = false;
+      document.getElementById('flashcard').classList.remove('flipped');
+      const card = currentCards[currentIndex];
+
+      document.getElementById('card-kanji').innerText = card.kanji;
+      document.getElementById('card-hiragana').innerText = card.hiragana;
+      document.getElementById('card-meaning').innerText = card.meaning;
+      document.getElementById('study-counter').innerText = `${currentIndex + 1} / ${currentCards.length}`;
+    }
+
+    function flipCard() {
+      isFlipped = !isFlipped;
+      document.getElementById('flashcard').classList.toggle('flipped', isFlipped);
+    }
+
+    function markCard(type) {
+      localStorage.setItem(`card_st_${currentCards[currentIndex].id}`, type);
+      nextCard();
+    }
+
+    function nextCard() {
+      if (currentIndex < currentCards.length - 1) {
+        currentIndex++;
+        showCard();
+      } else {
+        finishDay();
+      }
+    }
+
+    function prevCard() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        showCard();
+      }
+    }
+
+    // Day 완료 처리
+    function finishDay() {
+      if (!isReviewOnlyMode) {
+        const curr = parseInt(localStorage.getItem(`read_cnt_${currentLevel}_${currentDay}`) || 0);
+        localStorage.setItem(`read_cnt_${currentLevel}_${currentDay}`, curr + 1);
+      }
+
+      let memorized = 0, review = 0;
+      currentCards.forEach(c => {
+        const st = localStorage.getItem(`card_st_${c.id}`);
+        if (st === 'memorized') memorized++;
+        else if (st === 'review') review++;
+      });
+
+      document.getElementById('sum-memorized').innerText = memorized;
+      document.getElementById('sum-review').innerText = review;
+      document.getElementById('btn-retry-review').style.display = review > 0 ? 'block' : 'none';
+
+      document.getElementById('study-view').style.display = 'none';
+      document.getElementById('summary-view').style.display = 'flex';
+    }
+
+    function startReviewOnly() {
+      isReviewOnlyMode = true;
+      currentCards = currentCards.filter(c => localStorage.getItem(`card_st_${c.id}`) === 'review');
+      if (currentCards.length === 0) return;
+      currentIndex = 0;
+      document.getElementById('summary-view').style.display = 'none';
+      document.getElementById('study-view').style.display = 'flex';
+      showCard();
+    }
+
+    function restartEntireDay() { startStudy(currentDay); }
+    function goBackToMain() { renderMain(); }
+
+    // JSON 업로드 (대용량 3,000개 단어 처리)
+    function importVocabulary(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          let newDb = getVocabDb();
+
+          if (Array.isArray(data)) {
+            newDb[currentLevel] = data;
+          } else {
+            newDb = data;
+          }
+
+          localStorage.setItem('MY_KOTOBA_DB', JSON.stringify(newDb));
+          alert('단어 데이터가 성공적으로 탑재되었습니다!');
+          renderMain();
+        } catch (err) {
+          alert('JSON 파일 형식이 올바르지 않습니다.');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // 아이패드 키보드 단축키
+    document.addEventListener('keydown', (e) => {
+      const studyView = document.getElementById('study-view');
+      if (studyView.style.display === 'flex') {
+        if (e.key === ' ') { e.preventDefault(); flipCard(); }
+        else if (e.key === 'ArrowRight') nextCard();
+        else if (e.key === 'ArrowLeft') prevCard();
+        else if (e.key === '1') markCard('review');
+        else if (e.key === '2') markCard('memorized');
+      }
+    });
+
+    window.onload = renderMain;
+  </script>
+</body>
+</html>
