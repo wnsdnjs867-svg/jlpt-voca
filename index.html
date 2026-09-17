@@ -83,7 +83,6 @@
     .summary-btn.primary { background: var(--btn-purple); color: #fff; }
     .summary-btn.secondary { background: #f0f0f5; color: var(--text-dark); }
 
-    /* 붙여넣기 팝업 모달 */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100; justify-content: center; align-items: center; padding: 20px; }
     .modal-box { background: #fff; border-radius: 16px; padding: 24px; width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 16px; }
     .modal-box h3 { font-size: 1.1rem; font-weight: 800; }
@@ -104,8 +103,7 @@
     </div>
     <div class="header-right">
       <button class="import-btn primary" onclick="openModal()">📋 텍스트 붙여넣기</button>
-      <button class="import-btn" onclick="document.getElementById('file-input').click()">📂 파일 선택</button>
-      <input type="file" id="file-input" accept=".json,.txt,text/plain,application/json" style="display:none;" onchange="importVocabulary(event)">
+      <button class="import-btn" onclick="resetDatabase()" style="color:#ef4444;">🔄 초기화</button>
     </div>
   </header>
 
@@ -126,7 +124,7 @@
 
       <div class="section-info">
         <div class="sec-title" id="sec-title">N1 단어장</div>
-        <div class="sec-stats" id="sec-stats">200단어 · 4 Days · 0개 Day 회독 완료</div>
+        <div class="sec-stats" id="sec-stats">400단어 · 8 Days</div>
       </div>
 
       <div class="day-grid" id="day-grid"></div>
@@ -186,7 +184,6 @@
     </div>
   </main>
 
-  <!-- 텍스트 붙여넣기 모달 -->
   <div class="modal-overlay" id="paste-modal">
     <div class="modal-box">
       <h3>📋 JSON 텍스트 붙여넣기</h3>
@@ -200,6 +197,7 @@
   </div>
 
   <script>
+    // Day 1 ~ Day 8 (총 400단어 완벽 탑재)
     const DEFAULT_VOCAB = {
       N1: [
         { kanji: "遵守", hiragana: "じゅんしゅ", meaning: "준수" },
@@ -251,7 +249,371 @@
         { kanji: "予見", hiragana: "よけん", meaning: "예견" },
         { kanji: "探知", hiragana: "たんち", meaning: "탐지" },
         { kanji: "探求", hiragana: "たんきゅう", meaning: "탐구" },
-        { kanji: "考証", hiragana: "こうしょう", meaning: "고증" }
+        { kanji: "考証", hiragana: "こうしょう", meaning: "고증" },
+
+        // Day 2
+        { kanji: "固辞", hiragana: "こじ", meaning: "고사, 한사코 거절함" },
+        { kanji: "快諾", "hiragana": "かいだく", meaning: "쾌락, 흔쾌히 승낙함" },
+        { kanji: "承諾", "hiragana": "しょうだく", meaning: "승낙" },
+        { kanji: "黙認", "hiragana": "もくにん", meaning: "묵인" },
+        { kanji: "傍観", "hiragana": "ぼうかん", meaning: "방관" },
+        { kanji: "静観", "hiragana": "せいかん", meaning: "정관, 조용히 관망함" },
+        { kanji: "凝視", "hiragana": "ぎょうし", meaning: "응시" },
+        { kanji: "注視", "hiragana": "ちゅうし", meaning: "주시" },
+        { kanji: "監視", "hiragana": "かんし", meaning: "감시" },
+        { kanji: "警戒", "hiragana": "けいかい", meaning: "경계" },
+        { kanji: "威嚇", "hiragana": "いかく", meaning: "위협" },
+        { kanji: "脅迫", "hiragana": "きょうはく", meaning: "협박" },
+        { kanji: "恐喝", "hiragana": "きょうかつ", meaning: "공갈" },
+        { kanji: "強要", "hiragana": "きょうよう", meaning: "강요" },
+        { kanji: "強制", "hiragana": "きょうせい", meaning: "강제" },
+        { kanji: "弾圧", "hiragana": "だんあつ", meaning: "탄압" },
+        { kanji: "迫害", "hiragana": "はくがい", meaning: "박해" },
+        { kanji: "虐待", "hiragana": "ぎゃくたい", meaning: "학대" },
+        { kanji: "酷使", "hiragana": "こくし", meaning: "혹사" },
+        { kanji: "搾取", "hiragana": "さくしゅ", meaning: "착취" },
+        { kanji: "略奪", "hiragana": "りゃくだつ", meaning: "약탈" },
+        { kanji: "強奪", "hiragana": "ごうだつ", meaning: "강탈" },
+        { kanji: "横領", "hiragana": "おうりょう", meaning: "횡령" },
+        { kanji: "背任", "hiragana": "はいにん", meaning: "배임" },
+        { kanji: "汚職", "hiragana": "おしょく", meaning: "부패, 오직" },
+        { kanji: "贈賄", "hiragana": "ぞうわい", meaning: "뇌물 증여" },
+        { kanji: "収賄", "hiragana": "しゅうわい", meaning: "뇌물 수수" },
+        { kanji: "癒着", "hiragana": "ゆちゃく", meaning: "유착" },
+        { kanji: "忖度", "hiragana": "そんたく", meaning: "남의 마음을 헤아림" },
+        { kanji: "迎合", "hiragana": "げいごう", meaning: "영合, 아부" },
+        { kanji: "媚態", "hiragana": "びたい", meaning: "교태" },
+        { kanji: "諂い", "hiragana": "へつらい", meaning: "아첨" },
+        { kanji: "卑屈", "hiragana": "ひくつ", meaning: "비굴" },
+        { kanji: "傲慢", "hiragana": "ごうまん", meaning: "오만" },
+        { kanji: "横暴", "hiragana": "おうぼう", meaning: "횡포" },
+        { kanji: "専横", "hiragana": "せんおう", meaning: "전횡" },
+        { kanji: "独裁", "hiragana": "どくさい", meaning: "독재" },
+        { kanji: "専制", "hiragana": "せんせい", meaning: "전제" },
+        { kanji: "覇権", "hiragana": "はけん", meaning: "패権" },
+        { kanji: "権力", "hiragana": "けんりょく", meaning: "권력" },
+        { kanji: "権威", "hiragana": "けんい", meaning: "권위" },
+        { kanji: "威信", "hiragana": "いしん", meaning: "위신" },
+        { kanji: "威光", "hiragana": "いこう", meaning: "위광" },
+        { kanji: "威勢", "hiragana": "いせい", meaning: "위세" },
+        { kanji: "威厳", "hiragana": "いげん", meaning: "위엄" },
+        { kanji: "荘厳", "hiragana": "そうごん", meaning: "장엄" },
+        { kanji: "荘重", "hiragana": "そうちょう", meaning: "장중" },
+        { kanji: "厳粛", "hiragana": "げんしゅく", meaning: "엄숙" },
+        { kanji: "粛正", "hiragana": "しゅくせい", meaning: "숙정" },
+        { kanji: "粛清", "hiragana": "しゅくせい", meaning: "숙청" },
+
+        // Day 3
+        { kanji: "淘汰", hiragana: "とうた", meaning: "도태" },
+        { kanji: "追放", hiragana: "ついほう", meaning: "추방" },
+        { kanji: "逃亡", hiragana: "とうぼう", meaning: "도망" },
+        { kanji: "潜伏", hiragana: "せんぷく", meaning: "잠복" },
+        { kanji: "潜入", hiragana: "せんにゅう", meaning: "잠입" },
+        { kanji: "浸透", hiragana: "しんとう", meaning: "침투" },
+        { kanji: "充満", hiragana: "じゅうまん", meaning: "충만" },
+        { kanji: "充当", hiragana: "じゅうとう", meaning: "충당" },
+        { kanji: "補充", hiragana: "ほじゅう", meaning: "보충" },
+        { kanji: "補給", hiragana: "ほきゅう", meaning: "보급" },
+        { kanji: "給付", hiragana: "きゅうふ", meaning: "급부" },
+        { kanji: "支給", hiragana: "しきゅう", meaning: "지급" },
+        { kanji: "還付", hiragana: "かんぷ", meaning: "환급, 환부" },
+        { kanji: "返還", hiragana: "へんかん", meaning: "반환" },
+        { kanji: "移管", hiragana: "いかん", meaning: "이관" },
+        { kanji: "移譲", hiragana: "いじょう", meaning: "이양" },
+        { kanji: "譲渡", hiragana: "じょうと", meaning: "양도" },
+        { kanji: "売却", hiragana: "ばいきゃく", meaning: "매각" },
+        { kanji: "買収", hiragana: "ばいしゅう", meaning: "매수" },
+        { kanji: "接収", hiragana: "せっしゅう", meaning: "접수, 몰수" },
+        { kanji: "押収", hiragana: "おうしゅう", meaning: "압수" },
+        { kanji: "抑留", hiragana: "よくりゅう", meaning: "억류" },
+        { kanji: "拘束", hiragana: "こうそく", meaning: "구속" },
+        { kanji: "捕獲", hiragana: "ほかく", meaning: "포획" },
+        { kanji: "封鎖", hiragana: "ほうさ", meaning: "봉쇄" },
+        { kanji: "包囲", hiragana: "ほうい", meaning: "포위" },
+        { kanji: "突破", hiragana: "とっぱ", meaning: "돌파" },
+        { kanji: "破竹", hiragana: "はちく", meaning: "파죽" },
+        { kanji: "迎撃", hiragana: "げいげき", meaning: "요격" },
+        { kanji: "反撃", hiragana: "はんげき", meaning: "반격" },
+        { kanji: "奇襲", hiragana: "きしゅう", meaning: "기습" },
+        { kanji: "猛攻", hiragana: "もうこう", meaning: "맹공" },
+        { kanji: "撃退", hiragana: "げきたい", meaning: "격퇴" },
+        { kanji: "敗走", hiragana: "はいそう", meaning: "패주, 패해 달아남" },
+        { kanji: "敗北", hiragana: "はいぼく", meaning: "패배" },
+        { kanji: "降伏", hiragana: "こうふく", meaning: "항복" },
+        { kanji: "投降", hiragana: "とうこう", meaning: "투항" },
+        { kanji: "休戦", hiragana: "きゅうせん", meaning: "휴전" },
+        { kanji: "停戦", hiragana: "ていせん", meaning: "정전" },
+        { kanji: "終戦", hiragana: "しゅうせん", meaning: "종전" },
+        { kanji: "講和", hiragana: "こうわ", meaning: "강화" },
+        { kanji: "軍縮", hiragana: "ぐんしゅく", meaning: "군축" },
+        { kanji: "軍備", hiragana: "ぐんび", meaning: "군비" },
+        { kanji: "防衛", hiragana: "ぼうえい", meaning: "방위" },
+        { kanji: "警備", hiragana: "けいび", meaning: "경비" },
+        { kanji: "警護", hiragana: "けいご", meaning: "경호" },
+        { kanji: "護衛", hiragana: "ごえい", meaning: "호위" },
+        { kanji: "擁護", hiragana: "ようご", meaning: "옹호" },
+        { kanji: "庇護", hiragana: "ひご", meaning: "비호" },
+        { kanji: "支援", hiragana: "しえん", meaning: "지원" },
+
+        // Day 4
+        { kanji: "後援", hiragana: "こうえん", meaning: "후원" },
+        { kanji: "賛助", hiragana: "さんじょ", meaning: "찬조" },
+        { kanji: "寄付", hiragana: "きふ", meaning: "기부" },
+        { kanji: "寄贈", hiragana: "きぞう", meaning: "기증" },
+        { kanji: "寄進", hiragana: "きしん", meaning: "기신, 희사함" },
+        { kanji: "献金", hiragana: "けんきん", meaning: "헌금" },
+        { kanji: "拠出", hiragana: "きょしゅつ", meaning: "거출, 돈을 냄" },
+        { kanji: "拠金", hiragana: "きょきん", meaning: "거금" },
+        { kanji: "根拠", hiragana: "こんきょ", meaning: "근거" },
+        { kanji: "確証", hiragana: "かくしょう", meaning: "확증" },
+        { kanji: "裏付け", hiragana: "うらづけ", meaning: "뒷받침, 증거" },
+        { kanji: "典拠", hiragana: "てんきょ", meaning: "전거, 출처" },
+        { kanji: "出典", hiragana: "しゅってん", meaning: "출전" },
+        { kanji: "由来", hiragana: "ゆらい", meaning: "유래" },
+        { kanji: "変遷", hiragana: "へんせん", meaning: "변천" },
+        { kanji: "盛衰", hiragana: "せいすい", meaning: "성衰" },
+        { kanji: "興亡", hiragana: "こうぼう", meaning: "흥망" },
+        { kanji: "浮沈", hiragana: "ふちん", meaning: "부침, 흥망성쇠" },
+        { kanji: "栄華", hiragana: "えいが", meaning: "영화" },
+        { kanji: "繁栄", hiragana: "はんえい", meaning: "번영" },
+        { kanji: "隆盛", hiragana: "りゅうせい", meaning: "융성" },
+        { kanji: "衰退", hiragana: "すいたい", meaning: "쇠퇴" },
+        { kanji: "衰微", hiragana: "すいび", meaning: "쇠미" },
+        { kanji: "凋落", hiragana: "ちょうらく", meaning: "조락, 몰락함" },
+        { kanji: "没落", hiragana: "ぼつらく", meaning: "몰락" },
+        { kanji: "破滅", hiragana: "はめつ", meaning: "파멸" },
+        { kanji: "滅亡", hiragana: "めつぼう", meaning: "멸망" },
+        { kanji: "絶滅", hiragana: "ぜつめつ", meaning: "절멸" },
+        { kanji: "死滅", hiragana: "しめつ", meaning: "사멸" },
+        { kanji: "消滅", hiragana: "しょうめつ", meaning: "소멸" },
+        { kanji: "摩耗", hiragana: "まもう", meaning: "마모" },
+        { kanji: "消耗", hiragana: "しょうもう", meaning: "소모" },
+        { kanji: "減退", hiragana: "げんたい", meaning: "감퇴" },
+        { kanji: "減殺", hiragana: "げんさつ", meaning: "감쇄" },
+        { kanji: "相殺", hiragana: "そうさい", meaning: "상쇄" },
+        { kanji: "抹殺", hiragana: "まっさつ", meaning: "말살" },
+        { kanji: "隠匿", hiragana: "いんとく", meaning: "은닉" },
+        { kanji: "秘匿", hiragana: "ひとく", meaning: "비닉" },
+        { kanji: "偽装", hiragana: "ぎそう", meaning: "위장" },
+        { kanji: "変装", hiragana: "へんそう", meaning: "변장" },
+        { kanji: "擬態", hiragana: "ぎたい", meaning: "의태" },
+        { kanji: "模倣", hiragana: "もほう", meaning: "모방" },
+        { kanji: "擬造", hiragana: "ぎぞう", meaning: "위조" },
+        { kanji: "虚偽", hiragana: "きょぎ", meaning: "허위" },
+        { kanji: "虚構", hiragana: "きょこう", meaning: "허구" },
+        { kanji: "架空", hiragana: "かくう", meaning: "가공" },
+        { kanji: "抽象", hiragana: "ちゅうしょう", meaning: "추상" },
+        { kanji: "具現", hiragana: "ぐげん", meaning: "구현" },
+        { kanji: "体現", hiragana: "たいげん", meaning: "체현" },
+        { kanji: "形象", hiragana: "けいしょう", meaning: "형상" },
+
+        // Day 5
+        { kanji: "象徴", hiragana: "しょうちょう", meaning: "상징" },
+        { kanji: "標識", hiragana: "ひょうしき", meaning: "표식" },
+        { kanji: "標語", hiragana: "ひょうご", meaning: "표어" },
+        { kanji: "掲示", hiragana: "けいじ", meaning: "게시" },
+        { kanji: "公布", hiragana: "こうふ", meaning: "공포" },
+        { kanji: "発布", hiragana: "はっぷ", meaning: "발포" },
+        { kanji: "施行", hiragana: "しこう", meaning: "시행" },
+        { kanji: "適用", hiragana: "てきよう", meaning: "적용" },
+        { kanji: "準用", hiragana: "じゅんよう", meaning: "준용" },
+        { kanji: "援用", hiragana: "えんよう", meaning: "원용" },
+        { kanji: "濫用", hiragana: "らんよう", meaning: "남용" },
+        { kanji: "誤用", hiragana: "ごよう", meaning: "오용" },
+        { kanji: "悪用", hiragana: "あくよう", meaning: "악용" },
+        { kanji: "逆用", hiragana: "ぎゃくよう", meaning: "역용" },
+        { kanji: "流用", hiragana: "りゅうよう", meaning: "유용" },
+        { kanji: "転用", hiragana: "てんよう", meaning: "전용" },
+        { kanji: "借用", hiragana: "しゃくよう", meaning: "차용" },
+        { kanji: "踏襲", hiragana: "とうしゅう", meaning: "답습" },
+        { kanji: "継承", hiragana: "けいしょう", meaning: "계승" },
+        { kanji: "伝承", hiragana: "でんしょう", meaning: "전승" },
+        { kanji: "遺志", hiragana: "いし", meaning: "유지" },
+        { kanji: "遺産", hiragana: "いさん", meaning: "유산" },
+        { kanji: "遺品", hiragana: "いひん", meaning: "유품" },
+        { kanji: "遺言", hiragana: "いごん", meaning: "유언" },
+        { kanji: "遺棄", hiragana: "いき", meaning: "유기" },
+        { kanji: "破棄", hiragana: "はき", meaning: "파기" },
+        { kanji: "投棄", hiragana: "とうき", meaning: "투기" },
+        { kanji: "放棄", hiragana: "ほうき", meaning: "포기" },
+        { kanji: "棄権", hiragana: "きけん", meaning: "기권" },
+        { kanji: "辞任", hiragana: "じにん", meaning: "사임" },
+        { kanji: "退任", hiragana: "たいにん", meaning: "퇴임" },
+        { kanji: "離任", hiragana: "りにん", meaning: "이임" },
+        { kanji: "着任", hiragana: "ちゃくにん", meaning: "착임" },
+        { kanji: "赴任", hiragana: "ふにん", meaning: "부임" },
+        { kanji: "単身赴任", hiragana: "たんしんふにん", meaning: "단신부임" },
+        { kanji: "転勤", hiragana: "てんきん", meaning: "전근" },
+        { kanji: "異動", hiragana: "いどう", meaning: "인사 이동" },
+        { kanji: "昇進", hiragana: "しょうしん", meaning: "승진" },
+        { kanji: "昇格", hiragana: "しょうかく", meaning: "승격" },
+        { kanji: "降格", hiragana: "こうかく", meaning: "강등" },
+        { kanji: "左遷", hiragana: "させん", meaning: "좌천" },
+        { kanji: "免職", hiragana: "めんしょく", meaning: "면직" },
+        { kanji: "解雇", hiragana: "かいこ", meaning: "해고" },
+        { kanji: "整理解雇", hiragana: "せいりかいこ", meaning: "정리해고" },
+        { kanji: "依願退職", hiragana: "いがんたいしょく", meaning: "의원퇴직" },
+        { kanji: "定年", hiragana: "ていねん", meaning: "정년" },
+        { kanji: "年金", hiragana: "ねんきん", meaning: "연금" },
+        { kanji: "手当", hiragana: "てあて", meaning: "수당" },
+        { kanji: "報酬", hiragana: "ほうしゅう", meaning: "보수" },
+        { kanji: "対価", hiragana: "たいか", meaning: "대가" },
+
+        // Day 6
+        { kanji: "刷新", hiragana: "さっしん", meaning: "쇄신" },
+        { kanji: "変革", hiragana: "へんかく", meaning: "변혁" },
+        { kanji: "改編", hiragana: "かいへん", meaning: "개편" },
+        { kanji: "再編", hiragana: "さいへん", meaning: "재편" },
+        { kanji: "統合", hiragana: "とうごう", meaning: "통합" },
+        { kanji: "解体", hiragana: "かいたい", meaning: "해체" },
+        { kanji: "分散", hiragana: "ぶんさん", meaning: "분산" },
+        { kanji: "集積", hiragana: "しゅうせき", meaning: "집적" },
+        { kanji: "集約", hiragana: "しゅうやく", meaning: "집약" },
+        { kanji: "拡充", hiragana: "かくじゅう", meaning: "확충" },
+        { kanji: "増強", hiragana: "ぞうきょう", meaning: "증강" },
+        { kanji: "補強", hiragana: "ほきょう", meaning: "보강" },
+        { kanji: "扶助", hiragana: "ふじょ", meaning: "부조" },
+        { kanji: "救済", hiragana: "きゅうさい", meaning: "구제" },
+        { kanji: "恩恵", hiragana: "おんけい", meaning: "은혜" },
+        { kanji: "優遇", hiragana: "ゆうぐう", meaning: "우대" },
+        { kanji: "冷遇", hiragana: "れいぐう", meaning: "냉대" },
+        { kanji: "排斥", hiragana: "はいせき", meaning: "배척" },
+        { kanji: "隔離", hiragana: "かくり", meaning: "격리" },
+        { kanji: "遮断", hiragana: "しゃだん", meaning: "차단" },
+        { kanji: "閉鎖", hiragana: "へいさ", meaning: "폐쇄" },
+        { kanji: "釈放", hiragana: "しゃくほう", meaning: "석방" },
+        { kanji: "拘留", hiragana: "こうりゅう", meaning: "구류" },
+        { kanji: "監禁", hiragana: "かんきん", meaning: "감금" },
+        { kanji: "監修", hiragana: "かんしゅう", meaning: "감수" },
+        { kanji: "統括", hiragana: "とうかつ", meaning: "통괄" },
+        { kanji: "掌握", hiragana: "しょうあく", meaning: "장악" },
+        { kanji: "服従", hiragana: "ふくじゅう", meaning: "복종" },
+        { kanji: "隷属", hiragana: "れいぞく", meaning: "예속" },
+        { kanji: "屈服", hiragana: "くっぷく", meaning: "굴복" },
+        { kanji: "反発", hiragana: "はんぱつ", meaning: "반발" },
+        { kanji: "抵抗", hiragana: "ていこう", meaning: "저항" },
+        { kanji: "蜂起", hiragana: "ほうき", meaning: "봉기" },
+        { kanji: "鎮圧", hiragana: "ちんあつ", meaning: "진압" },
+        { kanji: "終息", hiragana: "しゅうそく", meaning: "종식" },
+        { kanji: "決裂", hiragana: "けつれつ", meaning: "결렬" },
+        { kanji: "和解", hiragana: "わかい", meaning: "화해" },
+        { kanji: "調停", hiragana: "ちょうてい", meaning: "조정" },
+        { kanji: "仲裁", hiragana: "ちゅうさい", meaning: "중재" },
+        { kanji: "妥結", hiragana: "だけつ", meaning: "타결" },
+        { kanji: "締結", hiragana: "ていけつ", meaning: "체결" },
+        { kanji: "発効", hiragana: "はっこう", meaning: "발효" },
+        { kanji: "失効", hiragana: "しっこう", meaning: "실효" },
+        { kanji: "懸念", hiragana: "けねん", meaning: "우려" },
+        { kanji: "漂流", hiragana: "ひょうりゅう", meaning: "표류" },
+        { kanji: "葛藤", hiragana: "かっとう", meaning: "갈등" },
+        { kanji: "収縮", hiragana: "しゅうしゅく", meaning: "수축" },
+        { kanji: "膨張", hiragana: "ぼうちょう", meaning: "팽창" },
+        { kanji: "逸脱", hiragana: "いつだつ", meaning: "일탈" },
+        { kanji: "顕著", hiragana: "けんちょ", meaning: "현저함" },
+
+        // Day 7
+        { kanji: "曖昧", hiragana: "あいまい", meaning: "애매함" },
+        { kanji: "漠然", hiragana: "ばくぜん", meaning: "막연함" },
+        { kanji: "冗長", hiragana: "じょうちょう", meaning: "장황함" },
+        { kanji: "潜在", hiragana: "せんざい", meaning: "잠재" },
+        { kanji: "普遍", hiragana: "ふへん", meaning: "보편" },
+        { kanji: "特殊", hiragana: "とくしゅ", meaning: "특수" },
+        { kanji: "卓越", hiragana: "たくえつ", meaning: "탁월" },
+        { kanji: "平穏", hiragana: "へいおん", meaning: "평온" },
+        { kanji: "驚異", hiragana: "きょうい", meaning: "경이" },
+        { kanji: "驚愕", hiragana: "きょうがく", meaning: "경악" },
+        { kanji: "畏怖", hiragana: "いふ", meaning: "두려움" },
+        { kanji: "羨望", hiragana: "せんぼう", meaning: "선망" },
+        { kanji: "嫉妬", hiragana: "しっと", meaning: "질투" },
+        { kanji: "羞恥", hiragana: "しゅうち", meaning: "수치" },
+        { kanji: "疑惑", hiragana: "ぎわく", meaning: "의혹" },
+        { kanji: "念願", hiragana: "ねんがん", meaning: "염원" },
+        { kanji: "宿願", hiragana: "しゅくがん", meaning: "숙원" },
+        { kanji: "執着", hiragana: "しゅうちゃく", meaning: "집착" },
+        { kanji: "拘泥", hiragana: "こうでい", meaning: "구애받음" },
+        { kanji: "固執", hiragana: "こしつ", meaning: "고집" },
+        { kanji: "妄想", hiragana: "もうそう", meaning: "망상" },
+        { kanji: "幻覚", hiragana: "げんかく", meaning: "환각" },
+        { kanji: "錯覚", hiragana: "さっかく", meaning: "착각" },
+        { kanji: "偏見", hiragana: "へんけん", meaning: "편견" },
+        { kanji: "先入観", hiragana: "せんにゅうかん", meaning: "선입관" },
+        { kanji: "独断", hiragana: "どくだん", meaning: "독단" },
+        { kanji: "偏重", hiragana: "へんちょう", meaning: "편중" },
+        { kanji: "傾倒", hiragana: "けいとう", meaning: "몰두" },
+        { kanji: "没頭", hiragana: "ぼっとう", meaning: "몰두" },
+        { kanji: "専念", hiragana: "せんねん", meaning: "전념" },
+        { kanji: "投機", hiragana: "とうき", meaning: "투기" },
+        { kanji: "投資", hiragana: "とうし", meaning: "투자" },
+        { kanji: "融資", hiragana: "ゆうし", meaning: "융자" },
+        { kanji: "出資", hiragana: "しゅっし", meaning: "출자" },
+        { kanji: "債務", hiragana: "さいむ", meaning: "채무" },
+        { kanji: "債権", hiragana: "さいけん", meaning: "채권" },
+        { kanji: "返済", hiragana: "へんさい", meaning: "변제" },
+        { kanji: "償還", hiragana: "しょうかん", meaning: "상환" },
+        { kanji: "滞納", hiragana: "たいのう", meaning: "체납" },
+        { kanji: "破産", hiragana: "はさん", meaning: "파産" },
+        { kanji: "倒産", hiragana: "とうさん", meaning: "도산" },
+        { kanji: "争議", hiragana: "そうぎ", meaning: "쟁의" },
+        { kanji: "罷免", hiragana: "ひめん", meaning: "파면" },
+        { kanji: "解任", hiragana: "かいにん", meaning: "해임" },
+        { kanji: "更迭", hiragana: "こうてつ", meaning: "경질" },
+        { kanji: "辞職", hiragana: "じしょく", meaning: "사직" },
+        { kanji: "辞退", hiragana: "じたい", meaning: "사퇴" },
+        { kanji: "留任", hiragana: "りゅうにん", meaning: "유임" },
+        { kanji: "重任", hiragana: "じゅうにん", meaning: "중임" },
+        { kanji: "就任", hiragana: "しゅうにん", meaning: "취임" },
+
+        // Day 8
+        { kanji: "概念", hiragana: "がいねん", meaning: "개념" },
+        { kanji: "理念", hiragana: "りねん", meaning: "이념" },
+        { kanji: "懸案", hiragana: "けんあん", meaning: "현안" },
+        { kanji: "懸賞", hiragana: "けんしょう", meaning: "현상금" },
+        { kanji: "訴訟", hiragana: "そしょう", meaning: "소訟" },
+        { kanji: "告発", hiragana: "こくはつ", meaning: "고발" },
+        { kanji: "告訴", hiragana: "こくそ", meaning: "고소" },
+        { kanji: "裁判", hiragana: "さいばん", meaning: "재판" },
+        { kanji: "勝訴", hiragana: "しょうそ", meaning: "승소" },
+        { kanji: "敗訴", hiragana: "はいそ", meaning: "패소" },
+        { kanji: "冤罪", hiragana: "えんざい", meaning: "누명" },
+        { kanji: "釈明", hiragana: "しゃくめい", meaning: "소명" },
+        { kanji: "弁明", hiragana: "べんめい", meaning: "변명" },
+        { kanji: "答弁", hiragana: "とうべん", meaning: "답변" },
+        { kanji: "反論", hiragana: "はんろん", meaning: "반론" },
+        { kanji: "異議", hiragana: "いぎ", meaning: "이의" },
+        { kanji: "異論", hiragana: "いろん", meaning: "다른 의견" },
+        { kanji: "協定", hiragana: "きょうてい", meaning: "협정" },
+        { kanji: "条約", hiragana: "じょうやく", meaning: "조약" },
+        { kanji: "宣言", hiragana: "せんげん", meaning: "선언" },
+        { kanji: "布告", hiragana: "ふこく", meaning: "포고" },
+        { kanji: "通達", hiragana: "つうたつ", meaning: "통달" },
+        { kanji: "告示", hiragana: "こくじ", meaning: "고시" },
+        { kanji: "照会", hiragana: "しょうかい", meaning: "조회" },
+        { kanji: "照合", hiragana: "しょうごう", meaning: "대조" },
+        { kanji: "検証", hiragana: "けんしょう", meaning: "검증" },
+        { kanji: "実証", hiragana: "じっしょう", meaning: "실증" },
+        { kanji: "考察", hiragana: "こうさつ", meaning: "고찰" },
+        { kanji: "推敲", hiragana: "すいこう", meaning: "퇴고" },
+        { kanji: "添削", hiragana: "てんさく", meaning: "첨삭" },
+        { kanji: "校正", hiragana: "こうせい", meaning: "교정" },
+        { kanji: "執筆", hiragana: "しっぴつ", meaning: "집필" },
+        { kanji: "寄稿", hiragana: "きこう", meaning: "기고" },
+        { kanji: "連載", hiragana: "れんさい", meaning: "연재" },
+        { kanji: "刊行", hiragana: "かんこう", meaning: "간행" },
+        { kanji: "購読", hiragana: "こうどく", meaning: "구독" },
+        { kanji: "著作", hiragana: "ちょさく", meaning: "저작" },
+        { kanji: "盗用", hiragana: "とうよう", meaning: "도용" },
+        { kanji: "盗作", hiragana: "とうさく", meaning: "표절" },
+        { kanji: "引用", hiragana: "いんよう", meaning: "인용" },
+        { kanji: "転載", hiragana: "てんさい", meaning: "전재" },
+        { kanji: "翻案", hiragana: "ほんあん", meaning: "번안" },
+        { kanji: "翻訳", hiragana: "ほんやく", meaning: "번역" },
+        { kanji: "通訳", hiragana: "つうやく", meaning: "통역" },
+        { kanji: "逐次", hiragana: "ちくじ", meaning: "축차, 순차" },
+        { kanji: "同時", hiragana: "どうじ", meaning: "동시" },
+        { kanji: "意訳", hiragana: "いやく", meaning: "의역" },
+        { kanji: "直訳", hiragana: "ちょくやく", meaning: "직역" },
+        { kanji: "覚悟", hiragana: "かくご", meaning: "각오" },
+        { kanji: "決意", hiragana: "けつい", meaning: "결의" }
       ]
     };
 
@@ -270,6 +632,13 @@
 
     function saveVocabDb(data) {
       localStorage.setItem('MY_KOTOBA_DB', JSON.stringify(data));
+    }
+
+    function resetDatabase() {
+      if (confirm('초기화하시겠습니까? 기본 400단어로 되돌아갑니다.')) {
+        localStorage.removeItem('MY_KOTOBA_DB');
+        renderMain();
+      }
     }
 
     function getDayWords(level, dayNum) {
@@ -433,20 +802,23 @@
     function restartEntireDay() { startStudy(currentDay); }
     function goBackToMain() { renderMain(); }
 
-    // 모달 제어
     function openModal() { document.getElementById('paste-modal').style.display = 'flex'; }
     function closeModal() { document.getElementById('paste-modal').style.display = 'none'; }
 
-    // 텍스트 직접 붙여넣기로 데이터 적용
+    // 아이패드 따옴표 자동 치환 및 JSON 적용
     function applyPastedJson() {
-      const text = document.getElementById('paste-input').value.trim();
+      let text = document.getElementById('paste-input').value.trim();
       if (!text) return;
+
+      // 굽은 따옴표치환 + 마크다운 코드블록 제거
+      text = text.replace(/[“”]/g, '"').replace(/[‘’]/g, "'");
+      text = text.replace(/```json/gi, '').replace(/```/g, '').trim();
+
       try {
         const data = JSON.parse(text);
         let db = getVocabDb();
 
         if (Array.isArray(data)) {
-          // 기존 목록에 뒤이어 추가
           db[currentLevel] = (db[currentLevel] || []).concat(data);
         } else {
           db = data;
@@ -458,29 +830,8 @@
         document.getElementById('paste-input').value = '';
         renderMain();
       } catch (e) {
-        alert('올바른 JSON 형식의 텍스트가 아닙니다.');
+        alert('형식이 올바르지 않습니다. 따옴표를 확인해주세요.');
       }
-    }
-
-    // 파일 선택 방식도 유지
-    function importVocabulary(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          const data = JSON.parse(e.target.result);
-          let db = getVocabDb();
-          if (Array.isArray(data)) db[currentLevel] = (db[currentLevel] || []).concat(data);
-          else db = data;
-          saveVocabDb(db);
-          alert('단어가 추가되었습니다!');
-          renderMain();
-        } catch (err) {
-          alert('파일 형식이 올바르지 않습니다.');
-        }
-      };
-      reader.readAsText(file);
     }
 
     document.addEventListener('keydown', (e) => {
@@ -488,7 +839,7 @@
       if (studyView.style.display === 'flex') {
         if (e.key === ' ') { e.preventDefault(); flipCard(); }
         else if (e.key === 'ArrowRight') nextCard();
-        else if (e.key === 'ArrowLeft') prevCard();
+        else if (e.key === 'ArrowLeft') nextCard();
         else if (e.key === '1') markCard('review');
         else if (e.key === '2') markCard('memorized');
       }
